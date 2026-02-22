@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="#1a1a2e"/>
+  <rect x="40" y="40" width="320" height="320" rx="16" stroke="#e94560" stroke-width="2" fill="none"/>
+  <text x="200" y="210" font-family="system-ui" font-size="18" fill="#a0a0a0" text-anchor="middle">Label</text>
+</svg>

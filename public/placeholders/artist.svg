@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="#1a1a2e"/>
+  <circle cx="200" cy="160" r="80" stroke="#e94560" stroke-width="2" fill="none"/>
+  <path d="M80 400V280c0-66 54-120 120-120s120 54 120 120v120" stroke="#e94560" stroke-width="2" fill="none"/>
+  <text x="200" y="350" font-family="system-ui" font-size="18" fill="#a0a0a0" text-anchor="middle">Artist</text>
+</svg>

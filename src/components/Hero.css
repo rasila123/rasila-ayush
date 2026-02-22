@@ -1,0 +1,202 @@
+.hero {
+  padding: var(--section-padding) 0;
+  text-align: center;
+  background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-bg) 100%);
+  transition: var(--transition-theme);
+}
+
+.hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Hero is visible on load; subtle entrance animation */
+.hero-block.hero-visible {
+  opacity: 1;
+  transform: translateY(0);
+  animation: hero-block-in 0.6s var(--animate-ease) forwards;
+}
+
+@keyframes hero-block-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hero-logo {
+  width: clamp(120px, 26vw, 200px);
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+  transition: transform 0.4s var(--animate-ease);
+}
+
+.hero:hover .hero-logo {
+  transform: scale(1.02);
+}
+
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, red, black);
+  /* background: linear-gradient(to right, #b91c1c 0%, #7f1d1d 35%, #1c1917 50%, #991b1b 70%, #0a0a0a 100%); */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+[data-theme="dark"] .hero-title {
+  background: linear-gradient(to right, #ffffff 0%, #fef3c7 40%, #fcd34d 70%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-tagline {
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+  color: var(--color-muted);
+  margin-bottom: 0.5rem;
+}
+
+.hero-cta {
+  display: inline-block;
+  padding: 0.85rem 2.25rem;
+  background: var(--color-accent);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 999px;
+  transition: transform 0.3s var(--animate-ease), box-shadow 0.3s ease, background 0.25s;
+}
+
+.hero-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(var(--color-accent-rgb), 0.35);
+}
+
+.hero-cta:active {
+  transform: translateY(-1px);
+}
+
+/* Stats row – common-box (below hero, above labels) */
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1.25rem, 3vw, 2rem);
+  margin-top: 2.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--color-border);
+  width: 100%;
+  max-width: 100%;
+}
+
+.hero-stats.stats-common {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 480px) {
+  .hero-stats.stats-common {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-stats.stats-common {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+.common-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: bold;
+  gap: 0.5rem;
+  padding: 1rem 0.5rem;
+  border-radius: 14px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  
+  transition: transform 0.35s var(--animate-ease), box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+}
+.common-box:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(var(--color-accent-rgb), 0.25);
+  border: 1px solid var(--color-border);
+}
+.common-box i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  width: 52px;
+  height: 52px;
+}
+
+.common-box i img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+/* Stats visible on load with staggered fade-in */
+.common-box.hero-stat-visible {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: hero-stat-in 0.5s var(--animate-ease) forwards;
+}
+
+.common-box.reveal-delay-1 { animation-delay: 0.1s; }
+.common-box.reveal-delay-2 { animation-delay: 0.15s; }
+.common-box.reveal-delay-3 { animation-delay: 0.2s; }
+.common-box.reveal-delay-4 { animation-delay: 0.25s; }
+.common-box.reveal-delay-5 { animation-delay: 0.3s; }
+.common-box.reveal-delay-6 { animation-delay: 0.35s; }
+
+@keyframes hero-stat-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.common-box:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(var(--color-accent-rgb), 0.25);
+}
+
+.count-data {
+  font-size: clamp(1.25rem, 3vw, 1.6rem);
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.counter-text {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+  text-align: center;
+  line-height: 1.3;
+}
+
