@@ -64,7 +64,7 @@ export default function Artists({ useCarousel = true }) {
   return (
     <section className="section" id="artists" ref={ref}>
       <div className="container">
-        <h2 className={`section-title reveal ${visible ? 'reveal-visible' : ''}`}>Artists</h2>
+        <h2 className={`section-title reveal ${visible ? 'reveal-visible' : ''}`}>Our Artists</h2>
         {loading ? (
           <div className="loading">Loading...</div>
         ) : (

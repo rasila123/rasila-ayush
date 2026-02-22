@@ -21,7 +21,7 @@ export default function Footer() {
           <p>Phone: +91-9826579100</p>
         </div>
         <div className="footer-legal">
-          <p>Official site of Skylark Infotainment. Privacy Policy</p>
+          <p>Official site of Skylark Infotainment</p>
           <p>Developed with ❤️ by <Link to="/admin" className="footer-developer-link">Ayush Raj Sharma</Link></p>
           <p>© {new Date().getFullYear()} Rasila Infotainment</p>
         </div>

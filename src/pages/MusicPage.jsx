@@ -6,7 +6,7 @@ export default function MusicPage() {
     <>
       <section className="section" style={{ paddingBottom: '1rem' }}>
         <div className="container">
-          <h1 className="section-title">Music</h1>
+          <h1 className="section-title">Our Music</h1>
         </div>
       </section>
       <Music useCarousel={false} />

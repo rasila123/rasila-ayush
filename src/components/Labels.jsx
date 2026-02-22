@@ -11,7 +11,7 @@ export default function Labels({ labels = DEFAULT_LABELS }) {
   return (
     <section className="section" id="labels" ref={ref}>
       <div className="container">
-        <h2 className={`section-title reveal ${visible ? 'reveal-visible' : ''}`}>Labels</h2>
+        <h2 className={`section-title reveal ${visible ? 'reveal-visible' : ''}`}>Our Labels</h2>
         <div className={`section-grid section-grid-uniform reveal ${visible ? 'reveal-visible' : ''} reveal-delay-1`}>
           {labels.map(({ id, name, image, channelUrl }, i) => (
             <a
