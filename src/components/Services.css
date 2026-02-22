@@ -1,0 +1,154 @@
+.services-container {
+  padding: 32px 12px;
+  background: var(--color-surface, #f8f9fa);
+}
+
+.services-heading {
+  text-align: center;
+  font-size: 2.2rem;
+  margin-bottom: 32px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  background: linear-gradient(90deg, red, black);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.services-heading::after {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(60deg, red, rgb(84, 55, 55));
+  margin: 12px auto 0;
+  border-radius: 2px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 28px;
+  justify-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.service-box {
+  width: 100%;
+  max-width: 340px;
+  min-height: 220px;
+  perspective: 1200px;
+  cursor: pointer;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  transition: box-shadow 0.3s, transform 0.3s;
+  background: transparent;
+}
+
+.service-box:hover {
+  transform: scale(1.04);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+
+.service-box-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.service-box-front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  background: #fff;
+}
+
+.service-box.flipped .service-img {
+  filter: brightness(0.55) blur(6px);
+  transition: filter 0.5s;
+}
+
+.service-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  filter: brightness(0.55);
+  border-radius: 18px;
+  transition: filter 0.5s;
+  background: grey;
+}
+
+.service-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.service-name {
+  font-size: 1.35rem;
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+
+.service-know {
+  font-size: 0.85rem;
+  color: #e0e0e0;
+  text-align: center;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+}
+
+.service-details {
+  font-size: 1.08rem;
+  text-align: center;
+  line-height: 1.5;
+  padding: 18px;
+}
+
+.service-details-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.08rem;
+  background: none;
+  margin: 0;
+  padding: 0 18px;
+  text-align: center;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+@media (max-width: 600px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  
+  .service-box {
+    max-width: 98vw;
+    min-height: 180px;
+  }
+  
+  .service-details {
+    font-size: 1rem;
+  }
+}

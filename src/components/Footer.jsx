@@ -11,13 +11,19 @@ export default function Footer() {
         </div>
         <div className="footer-links">
           <Link to="/">Home</Link>
-          <Link to="/#music">Music</Link>
-          <Link to="/#artists">Artists</Link>
+          <Link to="/music">Music</Link>
+          <Link to="/artists">Artists</Link>
           <Link to="/services">Services</Link>
           <Link to="/contact">Contact</Link>
         </div>
+        <div className="footer-contact-info">
+          <p>Email: rasilarecording@gmail.com</p>
+          <p>Phone: +91-9826579100</p>
+        </div>
         <div className="footer-legal">
-          <p>&copy; {new Date().getFullYear()} Rasila. All rights reserved.</p>
+          <p>Official site of Skylark Infotainment. Privacy Policy</p>
+          <p>Developed with ❤️ by <Link to="/admin" className="footer-developer-link">Ayush Raj Sharma</Link></p>
+          <p>© {new Date().getFullYear()} Rasila Infotainment</p>
         </div>
       </div>
     </footer>

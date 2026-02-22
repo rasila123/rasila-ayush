@@ -29,9 +29,9 @@ export default function ContactPage() {
           <h1 className="section-title">Contact Us</h1>
           <p className="contact-intro">Get in touch for collaborations, releases, or inquiries.</p>
           <div className="contact-methods">
-            <a href="mailto:rasilainfotainment@gmail.com" className="contact-card">
+            <a href="mailto:rasilarecording@gmail.com." className="contact-card">
               <span className="contact-label">Email</span>
-              <span className="contact-value">rasilainfotainment@gmail.com</span>
+              <span className="contact-value">rasilarecording@gmail.com.</span>
             </a>
             <a href="tel:+919826579100" className="contact-card">
               <span className="contact-label">Phone</span>

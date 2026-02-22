@@ -1,33 +1,103 @@
-import { useReveal } from '../hooks/useReveal'
-import './Section.css'
+import React, { useState } from 'react';
+import { useReveal } from '../hooks/useReveal';
+import './Services.css';
 
-const DEFAULT_SERVICES = [
-  { id: '1', title: 'Music Production', description: 'Professional recording, mixing and mastering for artists and labels.', image: '/placeholders/service.svg' },
-  { id: '2', title: 'Artist Management', description: 'End-to-end support for artists from strategy to releases.', image: '/placeholders/service.svg' },
-  { id: '3', title: 'Label Services', description: 'Distribution, promotion and rights management for labels.', image: '/placeholders/service.svg' },
-]
+const services = [
+  {
+    name: 'Music Production',
+    img: '/placeholders/assets/musicproduction.jpg',
+    details: 'Professional music production & Composition for all genres. Studio recording, mixing, mastering, songwriting, background music, sound effects and more.'
+  },
+  {
+    name: 'Video Production',
+    img: '/placeholders/assets/videoproduction.jpg',
+    details: 'High-quality video shoots, editing, and post-production for music videos, events, and commercials.'
+  },
+  {
+    name: 'Studio Setup',
+    img: '/placeholders/assets/studiosetup.jpg',
+    details: 'Complete studio design & setup including softwares, plugins and VSTs installation for music production.'
+  },
+  {
+    name: 'YouTube Services',
+    img: '/placeholders/assets/youtubeservices.jpg',
+    details: 'YouTube channel management, Content creation & promotion, reels and shorts, live telecasts etc.'
+  },
+  {
+    name: 'Distribution',
+    img: '/placeholders/assets/distribution.jpg',
+    details: 'Digital distribution of music & video contents to platforms like Spotify, Apple Music, YouTube, Instagram and more.'
+  },
+  {
+    name: 'Organising Events',
+    img: '/placeholders/assets/liveshow.jpg',
+    details: 'Organizing and managing live music events, artists for concerts, and gigs.'
+  },
+  {
+    name: 'Social media management',
+    img: '/placeholders/assets/socialmedia.jpg',
+    details: 'Social media management, content creation, and promotion for artists and brands.'
+  },
+  {
+    name: 'Live Events Coverage',
+    img: '/placeholders/assets/liveevent.jpg',
+    details: 'Live Events Recording, Streaming, Editing, distribution, management.'
+  },
+  {
+    name: 'Equipment Rental',
+    img: '/placeholders/assets/rent.jpg',
+    details: 'Rental services for professional audio and video equipment like Cameras, Microphones, Lighting, music instruments etc. for events, shoots, and productions.'
+  }
+];
 
-export default function Services({ services = DEFAULT_SERVICES }) {
-  const [ref, visible] = useReveal()
+const ServiceBox = ({ name, img, details }) => {
+  const [flipped, setFlipped] = useState(false);
   return (
-    <section className="section" id="services" ref={ref}>
-      <div className="container">
-        <h2 className={`section-title reveal ${visible ? 'reveal-visible' : ''}`}>Our Services</h2>
-        <div className="section-grid section-grid-uniform">
-          {services.map(({ id, title, description, image }, i) => (
-            <article
-              key={id}
-              className={`section-card section-card-service reveal ${visible ? 'reveal-visible' : ''} reveal-delay-${Math.min(i + 1, 6)}`}
-            >
-              <div className="section-card-img-wrap">
-                <img src={image} alt={title} className="section-card-img" />
+    <div
+      className={`service-box${flipped ? ' flipped' : ''}`}
+      onClick={() => setFlipped(f => !f)}
+      tabIndex={0}
+      aria-label={`Show details for ${name}`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          setFlipped(f => !f);
+        }
+      }}
+    >
+      <div className="service-box-inner">
+        <div className="service-box-front">
+          <img src={img} alt={name} className="service-img" />
+          <div className="service-overlay">
+            {!flipped && <>
+              <div className="service-name">{name}</div>
+              <div className="service-know">click to know more</div>
+            </>}
+            {flipped && (
+              <div className="service-details service-details-centered">
+                {details}
               </div>
-              <h3 className="section-card-title">{title}</h3>
-              <p className="section-card-desc">{description}</p>
-            </article>
-          ))}
+            )}
+          </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+const Services = () => {
+  const [ref, visible] = useReveal();
+  
+  return (
+    <section className="services-container" id="services" ref={ref}>
+      <h2 className={`services-heading section-heading ${visible ? 'reveal-visible' : ''}`}>Our Services</h2>
+      <div className={`services-grid ${visible ? 'reveal-visible' : ''}`}>
+        {services.map((service, idx) => (
+          <ServiceBox key={idx} {...service} />
+        ))}
+      </div>
     </section>
-  )
-}
+  );
+};
+
+export default Services;

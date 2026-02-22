@@ -5,8 +5,8 @@ import './Header.css'
 
 const NAV_ITEMS = [
   { to: '/', label: 'Home' },
-  { to: '/#music', label: 'Music' },
-  { to: '/#artists', label: 'Artists' },
+  { to: '/music', label: 'Music' },
+  { to: '/artists', label: 'Artists' },
   { to: '/services', label: 'Services' },
   { to: '/contact', label: 'Contact Us' },
 ]

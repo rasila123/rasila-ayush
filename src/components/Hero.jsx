@@ -17,7 +17,7 @@ export default function Hero() {
         <div className="hero-block hero-visible">
           <img src="/logo.png" alt="" className="hero-logo" aria-hidden />
           <h1 className="hero-title">Rasila Infotainment</h1>
-          <p className="hero-tagline">Music • Artists • Labels</p>
+          {/* <p className="hero-tagline">Music • Artists • Labels</p> */}
           <Link to="/contact" className="hero-cta">
             Contact
           </Link>
