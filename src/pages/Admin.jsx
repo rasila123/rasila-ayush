@@ -5,6 +5,36 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './Admin.css';
 
+// Platform logos - should match the Platforms.jsx logoMap
+const logoMap = {
+  'iTunes': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIiKOracQ8AnYdnjgy-CQe3Qkot0e0CU5XwQ&s',
+  'Shazam': 'https://img.icons8.com/color/96/shazam.png',
+  'Apple Music': 'https://www.shutterstock.com/image-vector/apple-music-logos-popular-streaming-600nw-2326870177.jpg',
+  'Spotify': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdhm0QX77yGJFrD_lk6iASPtpxc_is48Sc_g&s',
+  'Amazon Music': 'https://wallpapers.com/images/hd/amazon-music-logo-owwdlwkbkbplmz91-2.jpg',
+  'Audible': 'https://cdn.worldvectorlogo.com/logos/audible.svg',
+  'Snapchat': 'https://i.pinimg.com/736x/65/25/ea/6525ea3430a2145e472ce030dd98bdcb.jpg',
+  'Canva': 'https://img.icons8.com/color/96/canva.png',
+  'Pandora': 'https://img.icons8.com/color/96/pandora-app.png',
+  'YouTube': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI2E5Huc3ioxoXvRVn1phb8yWyk9jOjOWI8Q&s',
+  'YouTube Shorts': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMXlieX-1UjEMJUoe21hpPXUx6jOrKsYfJiA&s',
+  'gaana': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Gaana_%28music_streaming_service%29_logo.png/1200px-Gaana_%28music_streaming_service%29_logo.png',
+  'SoundCloud': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQx1Qi6WJbO3ub1j4_pWBeajrs1A4wYL1sEmA&s',
+  'Saavn': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/JioSaavn_Logo.svg/1024px-JioSaavn_Logo.svg.png',
+  'Anghami Music': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOW63bhTaI5XulvseNt7vUInE5fEyCHzasuw&s',
+  'Facebook': 'https://img.icons8.com/color/96/facebook-new.png',
+  'Instagram': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/2048px-Instagram_icon.png',
+  'WhatsApp': 'https://img.icons8.com/color/96/whatsapp--v1.png',
+  'YouTube Music': 'https://upload.wikimedia.org/wikipedia/commons/1/1c/YouTube_Music_2024.svg',
+  'WeSing': 'https://play-lh.googleusercontent.com/R8ROhhJoi-A34JeO_nVb8-FSznLvCLnMvrN-gCWH_9HilcXyhC1KKF__yCsY6hjfThox=s96-rw',
+  'TikTok': 'https://img.icons8.com/color/96/tiktok--v1.png',
+  'Hungama Music': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStY-aRGGKFmYDq69A8kitKLeH1b7Ga6fBA6Q&s',
+  'Resso': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpx4wBqh5oFPnIHc7gYBZMmuostvCCO1TWsw&s',
+  'Wynk Music': 'https://upload.wikimedia.org/wikipedia/commons/1/1d/Wynk_music_logo.png',
+  'Audible Magic': 'https://www.audiblemagic.com/wp-content/uploads/2019/08/AM-Logo.png',
+  'Rdio': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAsKIPKN1PnFJOJn4ItiP9LZrFkc1qjt7DOw&s'
+};
+
 const Admin = () => {
   const [authed, setAuthed] = useState(false);
   const [secret, setSecret] = useState('');
@@ -24,6 +54,11 @@ const Admin = () => {
   const navigate = useNavigate();
   const [option, setOption] = useState(null);
   const [editSong, setEditSong] = useState(null);
+  
+  // Platform links state
+  const [platformLinks, setPlatformLinks] = useState({});
+  const [loadingPlatforms, setLoadingPlatforms] = useState(false);
+  const [editPlatformName, setEditPlatformName] = useState(null);
 
   useEffect(() => {
     const fetchArtists = async () => {
@@ -44,6 +79,45 @@ const Admin = () => {
     };
     fetchSongs();
   }, []);
+
+  useEffect(() => {
+    const fetchPlatformLinks = async () => {
+      setLoadingPlatforms(true);
+      try {
+        const { data } = await supabase.from('platforms').select('name, link');
+        
+        const linksMap = {};
+        
+        // First, add all platforms from logoMap with empty links
+        Object.keys(logoMap).forEach(name => {
+          linksMap[name] = '';
+        });
+        
+        // Then, update with actual links from database
+        if (data) {
+          data.forEach(platform => {
+            if (platform.name && platform.link) {
+              linksMap[platform.name] = platform.link;
+            }
+          });
+        }
+        
+        setPlatformLinks(linksMap);
+      } catch (err) {
+        console.error('Error fetching platform links:', err);
+        const linksMap = {};
+        Object.keys(logoMap).forEach(name => {
+          linksMap[name] = '';
+        });
+        setPlatformLinks(linksMap);
+      }
+      setLoadingPlatforms(false);
+    };
+    
+    if (option === 'platforms') {
+      fetchPlatformLinks();
+    }
+  }, [option]);
 
   const refreshSongs = async () => {
     setLoadingSongs(true);
@@ -210,6 +284,74 @@ const Admin = () => {
     await refreshSongs();
   };
 
+  const handleUpdatePlatformLink = async (e) => {
+    e.preventDefault();
+    setUploading(true);
+    setError('');
+    setSuccess('');
+    
+    const platformName = e.target.platformName.value;
+    const platformLink = e.target.platformLink.value;
+    
+    if (!platformName) {
+      setError('Platform name is required.');
+      setUploading(false);
+      return;
+    }
+    
+    try {
+      // First check if platform exists - use .maybeSingle() or check array length
+      const { data: existingPlatform, error: fetchError } = await supabase
+        .from('platforms')
+        .select('id')
+        .eq('name', platformName);
+      
+      if (fetchError) {
+        console.error('Error checking platform:', fetchError);
+        throw fetchError;
+      }
+      
+      if (existingPlatform && existingPlatform.length > 0) {
+        // Update existing platform
+        const { error: updateError } = await supabase
+          .from('platforms')
+          .update({ link: platformLink })
+          .eq('name', platformName);
+        
+        if (updateError) {
+          console.error('Error updating platform:', updateError);
+          throw updateError;
+        }
+        console.log('Platform updated successfully');
+      } else {
+        // Insert new platform
+        const { error: insertError } = await supabase
+          .from('platforms')
+          .insert([{ name: platformName, link: platformLink }]);
+        
+        if (insertError) {
+          console.error('Error inserting platform:', insertError);
+          throw insertError;
+        }
+        console.log('Platform inserted successfully');
+      }
+      
+      // Update local state
+      setPlatformLinks(prev => ({
+        ...prev,
+        [platformName]: platformLink
+      }));
+      
+      setSuccess('Platform link updated successfully!');
+      setEditPlatformName(null);
+    } catch (err) {
+      console.error('Error in handleUpdatePlatformLink:', err);
+      setError('Failed to update platform link: ' + err.message);
+    }
+    
+    setUploading(false);
+  };
+
   if (!authed) {
     return (
       <>
@@ -268,6 +410,10 @@ const Admin = () => {
             <div onClick={()=>setOption('update')} className="admin-panel-option">
               <div className="admin-panel-option-icon">✏️</div>
               <div className="admin-panel-option-label">Update Music</div>
+            </div>
+            <div onClick={()=>setOption('platforms')} className="admin-panel-option">
+              <div className="admin-panel-option-icon">🔗</div>
+              <div className="admin-panel-option-label">Update Platform Link</div>
             </div>
           </div>
         </div>
@@ -487,6 +633,73 @@ const Admin = () => {
                 </form>
               </div>
             </div>
+          )}
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  if (option === 'platforms') {
+    return (
+      <>
+        <Header />
+        <div className="admin-update-container">
+          <button onClick={()=>setOption(null)} className="admin-back-btn">&larr; Back</button>
+          <h2>Update Platform Links</h2>
+          
+          {editPlatformName ? (
+            <div className="admin-edit-modal-bg">
+              <div className="admin-edit-modal">
+                <h3>Update Platform Link</h3>
+                <form onSubmit={handleUpdatePlatformLink}>
+                  <div className="admin-form-group">
+                    <label>Platform Name: </label>
+                    <input 
+                      type="text" 
+                      name="platformName" 
+                      defaultValue={editPlatformName} 
+                      className="admin-input"
+                      readOnly 
+                    />
+                  </div>
+                  <div className="admin-form-group">
+                    <label>Platform Link: </label>
+                    <input 
+                      type="text" 
+                      name="platformLink" 
+                      defaultValue={platformLinks[editPlatformName] || ''} 
+                      className="admin-input"
+                      placeholder="https://..."
+                    />
+                  </div>
+                  <button type="submit" disabled={uploading} className="admin-save-btn">Save</button>
+                  <button type="button" onClick={()=>setEditPlatformName(null)} className="admin-cancel-btn">Cancel</button>
+                  {error && <p className="admin-error-msg">{error}</p>}
+                  {success && <p className="admin-success-msg">{success}</p>}
+                </form>
+              </div>
+            </div>
+          ) : (
+            <>
+              {loadingPlatforms ? (
+                <p className="admin-loading-msg">Loading platforms...</p>
+              ) : (
+                <div className="admin-song-list">
+                  {Object.keys(logoMap).map((platformName) => (
+                    <div key={platformName} className="admin-song-item">
+                      <div className="admin-song-info">
+                        <div className="admin-song-title">{platformName}</div>
+                        <div className="admin-song-artist">{platformLinks[platformName] || '(No link set)'}</div>
+                      </div>
+                      <button onClick={() => setEditPlatformName(platformName)} className="admin-edit-btn" title="Edit">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00cfff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
         <Footer />

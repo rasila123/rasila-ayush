@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react'
 import { useReveal } from '../hooks/useReveal'
+import { supabase } from '../lib/supabase'
 import './Section.css'
 
 const logoMap = {
@@ -30,42 +32,64 @@ const logoMap = {
   'Rdio': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAsKIPKN1PnFJOJn4ItiP9LZrFkc1qjt7DOw&s'
 }
 
-const linkMap = {
-  'iTunes': '#',
-  'Rdio': '#',
-  'Shazam': '#',
-  'Apple Music': '#',
-  'Spotify': 'https://open.spotify.com/album/5DRKGThUOKh8qU5z3gpcYk',
-  'Amazon Music': 'https://music.amazon.com/albums/B0F34M5P16',
-  'Audible': '#',
-  'Snapchat': '#',
-  'Canva': '#',
-  'Pandora': '#',
-  'YouTube': 'https://www.youtube.com/@rasilaInfotainmentrecording',
-  'YouTube Shorts': 'https://youtube.com/shorts/7t8JmP553dQ?si=NyAnOxqpmtN2d2uY',
-  'gaana': 'https://gaana.com/album/betiya-ghar-ka-satkar-hai',
-  'SoundCloud': '#',
-  'Saavn': 'https://www.jiosaavn.com/album/betiya-ghar-ka-satkar-hai/R4GkRjCN2ck_',
-  'Hungama Music': '#',
-  'Resso': '#',
-  'Wynk Music': '#',
-  'Anghami Music': '#',
-  'Audible Magic': '#',
-  'Facebook': 'https://www.facebook.com/share/1BD2nxbD2k/',
-  'Instagram': 'https://www.instagram.com/rasilainfotainment?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==',
-  'WhatsApp': 'https://wa.me/9826579100',
-  'YouTube Music': '#',
-  'WeSing': '#',
-  'TikTok': '#',
-}
-
 export default function Platforms() {
   const [ref, visible] = useReveal()
-  
+  const [platformLinks, setPlatformLinks] = useState({})
+
+  useEffect(() => {
+    let isMounted = true;
+    
+    const fetchPlatformLinks = async () => {
+      if (!supabase) {
+        console.error('Supabase client not initialized')
+        return
+      }
+      
+      try {
+        const { data, error } = await supabase
+          .from('platforms')
+          .select('name, link')
+        
+        if (error) {
+          console.error('Error fetching platform links:', error)
+          return
+        }
+        
+        const linksMap = {}
+        
+        // Initialize with empty strings for all platforms in logoMap
+        Object.keys(logoMap).forEach(name => {
+          linksMap[name] = '#'
+        })
+        
+        // Override with actual links from database
+        if (data && data.length > 0) {
+          data.forEach(platform => {
+            if (platform.name) {
+              linksMap[platform.name] = platform.link || '#'
+            }
+          })
+        }
+        
+        if (isMounted) {
+          setPlatformLinks(linksMap)
+        }
+      } catch (err) {
+        console.error('Exception fetching platform links:', err)
+      }
+    }
+
+    fetchPlatformLinks()
+    
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
   const platforms = Object.keys(logoMap).map(name => ({
     name,
     logoUrl: logoMap[name],
-    url: linkMap[name] || '#'
+    url: platformLinks[name] || '#'
   }))
 
   return (
@@ -83,7 +107,6 @@ export default function Platforms() {
             aria-label={name}
           >
             <img src={logoUrl} alt={name} className="platform-logo" />
-            {/* <span className="platform-name">{name}</span> */}
           </a>
         ))}
       </div>
