@@ -17,8 +17,8 @@ export default function Footer() {
           <Link to="/contact">Contact</Link>
         </div>
         <div className="footer-contact-info">
-          <p>Email: rasilarecording@gmail.com</p>
-          <p>Phone: +91-9826579100</p>
+          <p><a href="mailto:rasilarecording@gmail.com.">Email: rasilarecording@gmail.com</a></p>
+          <p><a href="tel:+919826579100">Phone: +91-9826579100</a></p>
         </div>
         <div className="footer-legal">
           <p>Official site of Rasila Infotainment</p>

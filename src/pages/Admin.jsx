@@ -216,7 +216,7 @@ const Admin = () => {
         <Header />
         <div className="admin-login-bg">
           <div className="admin-login-box">
-            <div style={{textAlign:'center',marginBottom:'12px',color:'#2a5d9f',fontWeight:'bold'}}>Official Skylark Infotainment Admin Panel</div>
+            <div style={{textAlign:'center',marginBottom:'12px',color:'#2a5d9f',fontWeight:'bold'}}>Official Rasila Infotainment Admin Panel</div>
             <h2 className="admin-login-title">Admin Login</h2>
             <form onSubmit={handleLogin} autoComplete="off">
               <div className="admin-secret-field">
