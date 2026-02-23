@@ -69,7 +69,7 @@ export default function ArtistPage() {
   return (
     <div className="artist-page">
       <div className="container">
-        <Link to="/#artists" className="artist-back">← Back to Artists</Link>
+        <Link to="/artists" className="artist-back">← Back to Artists</Link>
         <section className="artist-hero">
           <div className="artist-hero-img-wrap">
             <img src={artist.photo} alt={artist.name} className="section-card-img" />
