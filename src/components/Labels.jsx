@@ -2,8 +2,12 @@ import { useReveal } from '../hooks/useReveal'
 import './Section.css'
 
 const DEFAULT_LABELS = [
-  { id: '1', name: 'Rasila Records', image: '/placeholders/label.svg', channelUrl: '#' },
-  { id: '2', name: 'Rasila Music', image: '/placeholders/label.svg', channelUrl: '#' },
+  { id: '1', name: 'Rasila Infotainment', image: '/logo.png', channelUrl: 'https://www.youtube.com/@rasilainfotainmentrecording' },
+  { id: '2', name: 'Rhythm Touch', image: '/placeholders/label1.png', channelUrl: 'https://www.youtube.com/@rhythmtouch100' },
+  { id: '2', name: 'Skylark Infotainment', image: '/placeholders/label2.jpg', channelUrl: 'https://www.youtube.com/skylarkinfotainment' },
+  { id: '2', name: 'Pramod Jain', image: '/placeholders/label3.jpeg', channelUrl: 'https://www.youtube.com/@pramodjainrasila' },
+  { id: '2', name: 'Bhakti Prabhu Darshan', image: '/placeholders/label4.png', channelUrl: 'https://www.youtube.com/@bhaktiprabhudarshan' },
+  { id: '2', name: 'Cartoon Rasila', image: '/placeholders/label5.png', channelUrl: 'https://www.youtube.com/@jaindarshan6689' },
 ]
 
 export default function Labels({ labels = DEFAULT_LABELS }) {

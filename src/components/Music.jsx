@@ -8,30 +8,56 @@ import './Section.css'
 export default function Music({ useCarousel = true }) {
   const [tracks, setTracks] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [ref, visible] = useReveal()
 
   useEffect(() => {
+    let isMounted = true;
+    
     const fetchTracks = async () => {
+      console.log('Music: Starting fetch...')
+      setLoading(true)
+      setError(null)
+      
       if (!supabase) {
-        console.error('Supabase not initialized')
+        console.error('Music: Supabase not initialized')
+        setError('Supabase not initialized')
         setLoading(false)
         return
       }
       
-      const { data, error } = await supabase
-        .from('songs')
-        .select('*')
-        .order('created_at', { ascending: false })
-      
-      if (error) {
-        console.error('Error fetching tracks:', error)
-      } else {
-        setTracks(data || [])
+      try {
+        const { data, error: fetchError } = await supabase
+          .from('songs')
+          .select('*')
+          .order('created_at', { ascending: false })
+        
+        console.log('Music: Response:', { data, error: fetchError })
+        
+        if (fetchError) {
+          console.error('Music: Error fetching tracks:', fetchError)
+          setError(fetchError.message)
+        } else {
+          if (isMounted) {
+            setTracks(data || [])
+            console.log('Music: Tracks loaded:', data?.length || 0)
+          }
+        }
+      } catch (err) {
+        console.error('Music: Exception:', err)
+        setError(err.message)
       }
-      setLoading(false)
+      
+      if (isMounted) {
+        setLoading(false)
+      }
     }
 
     fetchTracks()
+    
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   const renderTrack = (track) => (
@@ -60,6 +86,7 @@ export default function Music({ useCarousel = true }) {
           renderItem={renderTrack}
           loading={loading}
         />
+        {error && <div style={{textAlign:'center', padding:'20px', color:'red'}}>Error: {error}</div>}
       </section>
     )
   }
@@ -70,6 +97,10 @@ export default function Music({ useCarousel = true }) {
       <div className="container">
         {loading ? (
           <div className="loading">Loading...</div>
+        ) : error ? (
+          <div style={{textAlign:'center', padding:'20px', color:'red'}}>Error: {error}</div>
+        ) : tracks.length === 0 ? (
+          <div style={{textAlign:'center', padding:'20px'}}>No songs found. Add songs via Admin panel.</div>
         ) : (
           <div className="section-grid section-grid-uniform">
             {tracks.map(({ id, title, thumbnail, url }, i) => (

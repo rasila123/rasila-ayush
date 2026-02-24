@@ -38,11 +38,22 @@
 }
 
 .hero-logo {
-  width: clamp(120px, 26vw, 200px);
+  display: block;
+  width: clamp(160px, 36vw, 420px);
+  max-width: 70%;
   height: auto;
-  aspect-ratio: 1;
+  max-height: 45vh;
+  
   object-fit: contain;
   transition: transform 0.4s var(--animate-ease);
+}
+
+@media (min-width: 1024px) {
+  .hero-logo {
+    width: clamp(220px, 28vw, 520px);
+    max-width: 60%;
+    max-height: 50vh;
+  }
 }
 
 .hero:hover .hero-logo {

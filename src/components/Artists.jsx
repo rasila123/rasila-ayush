@@ -9,30 +9,56 @@ import './Section.css'
 export default function Artists({ useCarousel = true }) {
   const [artists, setArtists] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [ref, visible] = useReveal()
 
   useEffect(() => {
+    let isMounted = true;
+    
     const fetchArtists = async () => {
+      console.log('Artists: Starting fetch...')
+      setLoading(true)
+      setError(null)
+      
       if (!supabase) {
-        console.error('Supabase not initialized')
+        console.error('Artists: Supabase not initialized')
+        setError('Supabase not initialized')
         setLoading(false)
         return
       }
       
-      const { data, error } = await supabase
-        .from('artists')
-        .select('*')
-        .order('created_at', { ascending: false })
-      
-      if (error) {
-        console.error('Error fetching artists:', error)
-      } else {
-        setArtists(data || [])
+      try {
+        const { data, error: fetchError } = await supabase
+          .from('artists')
+          .select('*')
+          .order('created_at', { ascending: false })
+        
+        console.log('Artists: Response:', { data, error: fetchError })
+        
+        if (fetchError) {
+          console.error('Artists: Error fetching artists:', fetchError)
+          setError(fetchError.message)
+        } else {
+          if (isMounted) {
+            setArtists(data || [])
+            console.log('Artists: Artists loaded:', data?.length || 0)
+          }
+        }
+      } catch (err) {
+        console.error('Artists: Exception:', err)
+        setError(err.message)
       }
-      setLoading(false)
+      
+      if (isMounted) {
+        setLoading(false)
+      }
     }
 
     fetchArtists()
+    
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   const renderArtistCarousel = (artist) => (
@@ -56,6 +82,7 @@ export default function Artists({ useCarousel = true }) {
           renderItem={renderArtistCarousel}
           loading={loading}
         />
+        {error && <div style={{textAlign:'center', padding:'20px', color:'red'}}>Error: {error}</div>}
       </section>
     )
   }
@@ -67,6 +94,10 @@ export default function Artists({ useCarousel = true }) {
         <h2 className={`section-title reveal ${visible ? 'reveal-visible' : ''}`}>Our Artists</h2>
         {loading ? (
           <div className="loading">Loading...</div>
+        ) : error ? (
+          <div style={{textAlign:'center', padding:'20px', color:'red'}}>Error: {error}</div>
+        ) : artists.length === 0 ? (
+          <div style={{textAlign:'center', padding:'20px'}}>No artists found. Add artists via Admin panel.</div>
         ) : (
           <div className="section-grid section-grid-uniform">
             {artists.map(({ id, name, photo }, i) => (

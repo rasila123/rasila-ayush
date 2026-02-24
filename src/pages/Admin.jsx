@@ -129,21 +129,46 @@ const Admin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
-    const { data, error: dbError } = await supabase.from('password').select('password');
-    if (dbError || !data) {
-      console.error('Supabase error fetching passwords:', dbError);
-      setError(dbError ? `Error fetching secret codes: ${dbError.message}` : 'Error fetching secret codes from server.');
+    
+    if (!supabase) {
+      setError('Supabase client not configured. Please check your environment variables.');
       setAuthed(false);
       return;
     }
-    const entered = secret.trim();
-    const passwords = data.map(r => (r.password || '').toString());
-    if (!passwords.includes(entered)) {
-      setError('Incorrect secret code.');
+    
+    try {
+      const { data, error: dbError } = await supabase.from('password').select('password');
+      
+      if (dbError) {
+        console.error('Supabase error fetching passwords:', dbError);
+        if (dbError.message === 'Failed to fetch' || dbError.message.includes('network')) {
+          setError('Unable to connect to server. Please check your internet connection or Supabase project status.');
+        } else {
+          setError(`Error: ${dbError.message}`);
+        }
+        setAuthed(false);
+        return;
+      }
+      
+      if (!data || data.length === 0) {
+        setError('No admin accounts found. Please set up admin in database.');
+        setAuthed(false);
+        return;
+      }
+      
+      const entered = secret.trim();
+      const passwords = data.map(r => (r.password || '').toString());
+      if (!passwords.includes(entered)) {
+        setError('Incorrect secret code.');
+        setAuthed(false);
+        return;
+      }
+      setAuthed(true);
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An unexpected error occurred. Please try again.');
       setAuthed(false);
-      return;
     }
-    setAuthed(true);
   };
 
   const handleLogout = async () => {

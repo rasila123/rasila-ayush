@@ -15,7 +15,19 @@ export default function Hero() {
     <section className="hero">
       <div className="container hero-inner">
         <div className="hero-block hero-visible">
-          <img src="/logo.png" alt="" className="hero-logo" aria-hidden />
+          <video
+            className="hero-logo"
+            playsInline
+            muted
+            autoPlay
+            preload="auto"
+            poster="/logo.png"
+            aria-hidden
+          >
+              <source src="/logo.mp4" type="video/mp4" />
+            {/* Fallback for browsers that don't support video */}
+            <img src="/logo.png" alt="Rasila logo" />
+          </video>
           <h1 className="hero-title">Rasila Infotainment</h1>
           {/* <p className="hero-tagline">Music • Artists • Labels</p> */}
           <Link to="/contact" className="hero-cta">

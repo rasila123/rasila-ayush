@@ -32,50 +32,91 @@ const logoMap = {
   'Rdio': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAsKIPKN1PnFJOJn4ItiP9LZrFkc1qjt7DOw&s'
 }
 
+// Default fallback links - edit these with your actual links
+const defaultLinks = {
+  'Spotify': 'https://open.spotify.com',
+  'YouTube': 'https://www.youtube.com',
+  'Instagram': 'https://instagram.com',
+  'Facebook': 'https://facebook.com',
+  'Apple Music': 'https://music.apple.com',
+  'Amazon Music': 'https://music.amazon.com',
+  'SoundCloud': 'https://soundcloud.com',
+  'gaana': 'https://gaana.com',
+  'Saavn': 'https://www.jiosaavn.com',
+  'WhatsApp': 'https://wa.me'
+}
+
 export default function Platforms() {
   const [ref, visible] = useReveal()
   const [platformLinks, setPlatformLinks] = useState({})
+  const [dbStatus, setDbStatus] = useState('checking')
 
   useEffect(() => {
     let isMounted = true;
     
     const fetchPlatformLinks = async () => {
+      console.log('Platforms: Starting fetch...')
+      setDbStatus('checking')
+      
+      // Initialize with default links first
+      const linksMap = {}
+      Object.keys(logoMap).forEach(name => {
+        linksMap[name] = defaultLinks[name] || '#'
+      })
+      
       if (!supabase) {
-        console.error('Supabase client not initialized')
+        console.log('Platforms: No supabase client, using defaults')
+        if (isMounted) {
+          setPlatformLinks(linksMap)
+          setDbStatus('no-client')
+        }
         return
       }
       
       try {
-        const { data, error } = await supabase
+        console.log('Platforms: Attempting to fetch from database...')
+        
+        // First try to check if the table exists by selecting with a limit
+        const { data: platformData, error } = await supabase
           .from('platforms')
           .select('name, link')
+          .limit(10)
+        
+        console.log('Platforms: Response received:', { data: platformData, error })
         
         if (error) {
-          console.error('Error fetching platform links:', error)
+          console.error('Platforms: Database error:', error)
+          // If table doesn't exist or other error, use defaults
+          if (isMounted) {
+            setPlatformLinks(linksMap)
+            setDbStatus('error')
+          }
           return
         }
         
-        const linksMap = {}
-        
-        // Initialize with empty strings for all platforms in logoMap
-        Object.keys(logoMap).forEach(name => {
-          linksMap[name] = '#'
-        })
-        
-        // Override with actual links from database
-        if (data && data.length > 0) {
-          data.forEach(platform => {
-            if (platform.name) {
-              linksMap[platform.name] = platform.link || '#'
+        // If we got data, update the links
+        if (platformData && platformData.length > 0) {
+          console.log('Platforms: Got data from DB:', platformData)
+          platformData.forEach(platform => {
+            if (platform.name && platform.link) {
+              linksMap[platform.name] = platform.link
             }
           })
+          setDbStatus('success')
+        } else {
+          console.log('Platforms: No data in platforms table, using defaults')
+          setDbStatus('empty')
         }
         
         if (isMounted) {
           setPlatformLinks(linksMap)
         }
       } catch (err) {
-        console.error('Exception fetching platform links:', err)
+        console.error('Platforms: Exception:', err)
+        if (isMounted) {
+          setPlatformLinks(linksMap)
+          setDbStatus('exception')
+        }
       }
     }
 
@@ -92,9 +133,17 @@ export default function Platforms() {
     url: platformLinks[name] || '#'
   }))
 
+  console.log('Platforms: Rendering with links:', platformLinks)
+
   return (
     <section className="presence-section" ref={ref}>
       <h2 className="section-heading">Our <span>Presence</span></h2>
+      {/* Debug info - remove in production */}
+      {process.env.NODE_ENV === 'development' && (
+        <div style={{textAlign:'center', fontSize:'12px', color:'#666', marginBottom:'10px'}}>
+          DB Status: {dbStatus}
+        </div>
+      )}
       <div className="platforms">
         {platforms.map(({ name, url, logoUrl }, i) => (
           <a
