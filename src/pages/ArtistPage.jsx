@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import '../components/Section.css'
+import Footer from '../components/Footer'
 import './ArtistPage.css'
 
 export default function ArtistPage() {
@@ -67,39 +68,42 @@ export default function ArtistPage() {
   }
 
   return (
-    <div className="artist-page">
-      <div className="container">
-        <Link to="/artists" className="artist-back">← Back to Artists</Link>
-        <section className="artist-hero">
-          <div className="artist-hero-img-wrap">
-            <img src={artist.photo} alt={artist.name} className="section-card-img" />
-          </div>
-          <h1 className="artist-name">{artist.name}</h1>
-        </section>
-        <section className="artist-works">
-          <h2>Works</h2>
-          {songs.length === 0 ? (
-            <p>No songs found for this artist.</p>
-          ) : (
-            <div className="section-grid section-grid-uniform">
-              {songs.map(({ id: songId, title, thumbnail, url }) => (
-                <a
-                  key={songId}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="section-card section-card-link"
-                >
-                  <div className="section-card-img-wrap">
-                    <img src={thumbnail} alt={title} className="section-card-img" />
-                  </div>
-                  <span className="section-card-title">{title}</span>
-                </a>
-              ))}
+    <>
+      <div className="artist-page">
+        <div className="container">
+          <Link to="/artists" className="artist-back">← Back to Artists</Link>
+          <section className="artist-hero">
+            <div className="artist-hero-img-wrap">
+              <img src={artist.photo} alt={artist.name} className="section-card-img" />
             </div>
-          )}
-        </section>
+            <h1 className="artist-name">{artist.name}</h1>
+          </section>
+          <section className="artist-works">
+            <h2>Works</h2>
+            {songs.length === 0 ? (
+              <p>No songs found for this artist.</p>
+            ) : (
+              <div className="section-grid section-grid-uniform">
+                {songs.map(({ id: songId, title, thumbnail, url }) => (
+                  <a
+                    key={songId}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="section-card section-card-link"
+                  >
+                    <div className="section-card-img-wrap">
+                      <img src={thumbnail} alt={title} className="section-card-img" />
+                    </div>
+                    <span className="section-card-title">{title}</span>
+                  </a>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   )
 }
