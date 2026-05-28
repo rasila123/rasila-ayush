@@ -8,6 +8,7 @@ const DEFAULT_LABELS = [
   { id: '2', name: 'Pramod Jain', image: '/placeholders/label3.jpeg', channelUrl: 'https://www.youtube.com/@pramodjainrasila' },
   { id: '2', name: 'Bhakti Prabhu Darshan', image: '/placeholders/label4.png', channelUrl: 'https://www.youtube.com/@bhaktiprabhudarshan' },
   { id: '2', name: 'Cartoon Rasila', image: '/placeholders/label5.png', channelUrl: 'https://www.youtube.com/@jaindarshan6689' },
+  { id: '2', name: 'Beat Adda', image: '/placeholders/label6.png', channelUrl: 'https://youtube.com/@beatadda9' },
 ]
 
 export default function Labels({ labels = DEFAULT_LABELS }) {
